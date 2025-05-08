@@ -1,28 +1,37 @@
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_community.chat_models import ChatOpenAI
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 llm = ChatOpenAI(
     base_url="http://localhost:1234/v1",
     api_key="lm-studio",
-    model="mistral"
+    model="mistral",
+    streaming=True,
+    max_tokens=1250,
+    callbacks=[StreamingStdOutCallbackHandler()]
 )
 
-template = """
-Kullanıcının egzersiz bilgileri:
-- Hedef: {hedef}
-- Spor ekipmanı: {ekipman}
-- Haftalık spor günü: {gun_sayisi}
 
-Buna göre:
-1. Haftalık egzersiz programı oluştur (Pazartesi - Pazar)
-2. Her güne 1-2 kas grubu ata (örneğin: Göğüs + Kol)
-3. Her kas grubu için 2-3 hareket öner
-4. Kullanıcının ekipmanına uygun hareketler öner
-5. Her egzersizin yanında kısa bir açıklama ver
+template="""
+Kullanıcının hedefi: {hedef}
+Kullanıcının sahip olduğu ekipman: {ekipman}
+Haftalık spor günü: {gun_sayisi}
 
-Sadece sade, uygulanabilir ve açık bir program ver.
+Bu bilgilere göre haftalık bir egzersiz planı oluştur.
+
+🔴 NOTLAR:
+- Sadece {gun_sayisi} günlük bir plan yaz (fazla gün ekleme!)
+- HER gün için tek satırda KISA ve ÖZET yaz: GÜN: Egzersiz Adı (Süre veya Set)
+- Gereksiz açıklama, tekrar veya ek not yazma.
+- Örneğin:
+    Pazartesi: Antrenman türü (örneğin: ağırlık, kardiyo, esneme vb.) ve süre (örneğin: 30 dakika)
+Günler: Antrenman türü ve süre (örneğin: 30 dakika)
+- Cevabın başına veya sonuna ek açıklama ekleme, sadece plan yaz!
 """
+
+
+
 
 prompt = PromptTemplate(
     input_variables=["hedef", "ekipman", "gun_sayisi"],

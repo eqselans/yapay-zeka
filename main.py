@@ -1,9 +1,8 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 from fastapi.responses import HTMLResponse
-
 
 from agents.user_analysis_agent import analyze_user
 from agents.macro_calculator_agent import calculate_macros
@@ -12,6 +11,7 @@ from agents.workout_planning_agent import generate_workout_plan
 from agents.schedule_agent import generate_schedule
 from agents.motivation_agent import generate_motivation
 from agents.plan_formatter_agent import format_plan
+from agents.filters import filter_diet_plan
 
 app = FastAPI()
 
@@ -23,32 +23,120 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class PlanInput(BaseModel):
+# MODELLER
+class DietInput(BaseModel):
+    kalori: int
+    protein: int
+    karbonhidrat: int
+    yag: int
+    alerjiler: str
+    ekipman: str
+
+class WorkoutInput(BaseModel):
+    hedef: str
+    ekipman: str
+    gun_sayisi: int
+
+class ScheduleInput(BaseModel):
+    ogun_sayisi: int
+    uyku_saatleri: str
+    spor_saati: str
+
+class MotivationInput(BaseModel):
+    hedef: str
+    spor_gunu: int
+
+class AnalysisInput(BaseModel):
     yas: int
     boy: int
     kilo: int
+    cinsiyet: str
     hedef: str
+
+class MacroInput(BaseModel):
+    kalori: int
+    hedef: str
+
+class FormatInput(BaseModel):
+    diyet: str
+    egzersiz: str
+    zamanlama: str
+    motivasyon: str
+
+class FilterInput(BaseModel):
+    plan: str
+    alerjiler: str
     ekipman: str
 
-@app.post("/generate-plan")
-async def generate_plan(data: PlanInput):
-    analiz = analyze_user(data.yas, data.boy, data.kilo, "erkek", data.hedef)
-    
-    # Basit sayı çıkarımı için örnek değer (real extraction yapılabilir)
-    kalori = 2200
-    protein = 160
-    karbonhidrat = 190
-    yag = 65
+# ENDPOINTLER
 
-    diyet = generate_diet_plan(kalori, protein, karbonhidrat, yag, "süt", data.ekipman)
-    egzersiz = generate_workout_plan(data.hedef, data.ekipman, 4)
-    zaman = generate_schedule(4, "02:00 - 08:30", "12:00")
-    motivasyon = generate_motivation(data.hedef, 4)
+@app.post("/generate-diet")
+async def generate_diet(data: DietInput):
+    return generate_diet_plan(
+        kalori=data.kalori,
+        protein=data.protein,
+        karbonhidrat=data.karbonhidrat,
+        yag=data.yag,
+        alerjiler=data.alerjiler,
+        ekipman=data.ekipman
+    )
 
-    sonuc = format_plan(diyet, egzersiz, zaman, motivasyon)
-    return sonuc
+@app.post("/generate-workout")
+async def generate_workout(data: WorkoutInput):
+    return generate_workout_plan(
+        hedef=data.hedef,
+        ekipman=data.ekipman,
+        gun_sayisi=data.gun_sayisi
+    )
 
+@app.post("/generate-schedule")
+async def generate_schedule_api(data: ScheduleInput):
+    return generate_schedule(
+        ogun_sayisi=data.ogun_sayisi,
+        uyku_saatleri=data.uyku_saatleri,
+        spor_saati=data.spor_saati
+    )
 
+@app.post("/generate-motivation")
+async def generate_motivation_api(data: MotivationInput):
+    return generate_motivation(
+        hedef=data.hedef,
+        spor_gunu=data.spor_gunu
+    )
+
+@app.post("/generate-analysis")
+async def generate_analysis(data: AnalysisInput):
+    return analyze_user(
+        yas=data.yas,
+        boy=data.boy,
+        kilo=data.kilo,
+        cinsiyet=data.cinsiyet,
+        hedef=data.hedef
+    )
+
+@app.post("/generate-macro")
+async def generate_macro(data: MacroInput):
+    return calculate_macros(
+        kalori=data.kalori,
+        hedef=data.hedef
+    )
+
+@app.post("/format-plan")
+async def format_plan_api(data: FormatInput):
+    return format_plan(
+        diyet=data.diyet,
+        egzersiz=data.egzersiz,
+        zamanlama=data.zamanlama,
+        motivasyon=data.motivasyon
+    )
+
+@app.post("/filter-plan")
+async def filter_plan_api(data: FilterInput):
+    return filter_diet_plan(
+        plan=data.plan,
+        alerjiler=data.alerjiler,
+        ekipman=data.ekipman
+    )
 
 @app.get("/", response_class=HTMLResponse)
 def root():

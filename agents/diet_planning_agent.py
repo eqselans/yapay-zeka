@@ -1,11 +1,15 @@
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_community.chat_models import ChatOpenAI
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 llm = ChatOpenAI(
     base_url="http://localhost:1234/v1",
     api_key="lm-studio",
-    model="mistral"
+    model="mistral",
+    streaming=True,
+    max_tokens=1250,
+    callbacks=[StreamingStdOutCallbackHandler()]
 )
 
 template = """

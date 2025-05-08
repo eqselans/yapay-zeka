@@ -1,4 +1,4 @@
-def filtrele_yemekler(yemek_listesi: list, alerjiler: list, ekipman: list):
+def filter_diet_plan(yemek_listesi: list, alerjiler: list, ekipman: list):
     filtrelenmis = []
     for yemek in yemek_listesi:
         if any(al in yemek["icerik"] for al in alerjiler):
@@ -9,7 +9,7 @@ def filtrele_yemekler(yemek_listesi: list, alerjiler: list, ekipman: list):
     return filtrelenmis
 
 
-def filtrele_egzersizler(egzersiz_listesi: list, kullanici_ekipman: list):
+def filter_workout_plan(egzersiz_listesi: list, kullanici_ekipman: list):
     filtrelenmis = []
     for egzersiz in egzersiz_listesi:
         if egzersiz["ekipman"] == "vücut ağırlığı" or egzersiz["ekipman"] in kullanici_ekipman:

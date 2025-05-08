@@ -2,16 +2,17 @@ from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_community.chat_models import ChatOpenAI
 import os
-from dotenv import load_dotenv
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-load_dotenv()
-
-# LM Studio'daki OpenAI uyumlu API'ye bağlan
 llm = ChatOpenAI(
-    base_url="http://localhost:1234/v1",  # LM Studio sunucusu
-    api_key="lm-studio",  # key kısmı önemli değil ama boş geçemezsin
-    model="mistral"   # LM Studio model ismini burada çok önemsemiyor
+    base_url="http://localhost:1234/v1",
+    api_key="lm-studio",
+    model="mistral",
+    streaming=True,
+    max_tokens=1250,
+    callbacks=[StreamingStdOutCallbackHandler()]
 )
+ 
 
 template = """
 Kullanıcının bilgileri:
@@ -23,11 +24,15 @@ Kullanıcının bilgileri:
 - Hedef: {hedef}
 
 Bu verilere göre:
+Çok özet bir şekilde:
 1. BMR hesapla
 2. Günlük kalori ihtiyacını belirle
 3. Hedefe göre ayarla (örneğin kilo vermek için azalt)
 4. Günlük protein ihtiyacını (kg başına 1.6 - 2.2g) hesapla
 5. Sonuçları sırayla ve açık şekilde yaz
+
+Her bir madde tek bir satırda kısa ve net bir şekilde yazılmalı.
+
 """
 
 prompt = PromptTemplate(
