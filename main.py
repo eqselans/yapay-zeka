@@ -12,11 +12,10 @@ from agents.schedule_agent import generate_schedule
 from agents.motivation_agent import generate_motivation
 from agents.plan_formatter_agent import format_plan
 from agents.filters import filter_diet_plan_llm
-from agents.qa_agent import answer_user_question  # ✅ Yeni agent
+from agents.qa_agent import answer_user_question
 
 app = FastAPI()
 
-# CORS ayarları
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,9 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ===================
-# 📦 Veri Modelleri
-# ===================
 
 class DietInput(BaseModel):
     kalori: int
@@ -72,12 +68,8 @@ class FilterInput(BaseModel):
     alerjiler: str
     ekipman: str
 
-class QAInput(BaseModel):  # ✅ Yeni model
+class QAInput(BaseModel):
     soru: str
-
-# ===================
-# 🚀 API Endpointleri
-# ===================
 
 @app.post("/generate-diet")
 async def generate_diet(data: DietInput):
