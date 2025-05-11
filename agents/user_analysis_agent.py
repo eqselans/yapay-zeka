@@ -16,24 +16,30 @@ llm = ChatOpenAI(
 
 template = """
 Kullanıcının bilgileri:
-
 - Yaş: {yas}
 - Boy: {boy} cm
 - Kilo: {kilo} kg
 - Cinsiyet: {cinsiyet}
 - Hedef: {hedef}
 
-Bu verilere göre:
-Çok özet bir şekilde:
-1. BMR hesapla
-2. Günlük kalori ihtiyacını belirle
-3. Hedefe göre ayarla (örneğin kilo vermek için azalt)
-4. Günlük protein ihtiyacını (kg başına 1.6 - 2.2g) hesapla
-5. Sonuçları sırayla ve açık şekilde yaz
+Şunları yap:
 
-Her bir madde tek bir satırda kısa ve net bir şekilde yazılmalı.
+1. BMR'yi hesapla (Mifflin-St Jeor formülü kullanılmalı).
+2. Günlük kalori ihtiyacını hafif aktif (1.5x) olarak belirle.
+3. Hedefe göre bu kalori değerini kilo vermek için %20 azalt veya kas kazanımı için %15 artır.
+4. Günlük protein ihtiyacını kg başına 2g olarak hesapla.
+5. Sadece sonuçları sırayla ve **tek satırlık cümlelerle, sayılarla birlikte** yaz.
+6. Formül veya açıklama verme, sadece çıktıyı yaz.
+7. Madde madde yazma ne yazarsan açıklamasına direkt olarak yaz.
 
+Örnek çıktı:
+1. BMR: 1750 kcal  
+2. Günlük ihtiyaç: 2625 kcal  
+3. Hedefe göre ayarlanmış: 2100 kcal  
+4. Protein ihtiyacı: 180g
 """
+
+
 
 prompt = PromptTemplate(
     input_variables=["yas", "boy", "kilo", "cinsiyet", "hedef"],

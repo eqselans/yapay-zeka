@@ -35,6 +35,7 @@
       <li class="nav-item"><button class="nav-link" onclick="showSection('macro')">🍽️ Makro Hesap</button></li>
       <li class="nav-item"><button class="nav-link" onclick="showSection('formatter')">📝 Plan Birleştir</button></li>
       <li class="nav-item"><button class="nav-link" onclick="showSection('filter')">🚫 Filtreleme</button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showSection('qa')">❓ Soru-Cevap</button></li>
     </ul>
 
     <!-- Diyet -->
@@ -134,6 +135,15 @@
       <div id="filterOutput" class="result-box"></div>
     </div>
 
+    <!-- Soru-Cevap -->
+    <div id="qa" class="section">
+      <form id="qaForm">
+        <div class="mb-3"><label>Sorunuz</label><textarea class="form-control" name="soru" rows="3" required></textarea></div>
+        <button type="submit" class="btn btn-outline-primary w-100">❓ Cevap Al</button>
+      </form>
+      <div id="qaOutput" class="result-box"></div>
+    </div>
+
   </div>
 
   <script>
@@ -151,7 +161,6 @@
         const formData = new FormData(this);
         const jsonData = Object.fromEntries(formData.entries());
 
-        // ✅ Önce "cevap bekleniyor" mesajı göster
         document.getElementById(outputId).textContent = "⏳ Cevap bekleniyor...";
 
         try {
@@ -161,13 +170,14 @@
             body: JSON.stringify(jsonData)
           });
           const result = await response.text();
-          document.getElementById(outputId).textContent = result;
+          let cleanResult = result.replace(/\\n/g, '\n').replace(/\n/g, '<br>');
+          document.getElementById(outputId).innerHTML = cleanResult;
+
         } catch (error) {
           document.getElementById(outputId).textContent = "❌ Bir hata oluştu.";
         }
       });
     }
-
 
     handleFormSubmit('dietForm', 'dietOutput', 'generate-diet');
     handleFormSubmit('workoutForm', 'workoutOutput', 'generate-workout');
@@ -177,6 +187,7 @@
     handleFormSubmit('macroForm', 'macroOutput', 'generate-macro');
     handleFormSubmit('formatterForm', 'formatterOutput', 'format-plan');
     handleFormSubmit('filterForm', 'filterOutput', 'filter-plan');
+    handleFormSubmit('qaForm', 'qaOutput', 'ask-question');
 
     showSection('diet');
   </script>

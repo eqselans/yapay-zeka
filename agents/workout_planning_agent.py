@@ -27,6 +27,7 @@ Bu bilgilere göre haftalık bir egzersiz planı oluştur.
 - Örneğin:
     Pazartesi: Antrenman türü (örneğin: ağırlık, kardiyo, esneme vb.) ve süre (örneğin: 30 dakika)
 Günler: Antrenman türü ve süre (örneğin: 30 dakika)
+Haftanın günlerini rastgele şekilde seçebilirsin. (sıralı olsun)
 - Cevabın başına veya sonuna ek açıklama ekleme, sadece plan yaz!
 """
 
