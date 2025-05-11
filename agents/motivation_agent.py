@@ -22,6 +22,7 @@ Bu bilgiye göre:
 2. Spor günlerinde ekstra motive edici sözler kullan
 3. Kısa, güçlü ve pozitif olsun
 4. Her günü "Pazartesi:", "Salı:" gibi başlıkla sırala
+5. Cümleler anlamlı ve akıcı olsun
 
 Her bir madde tek bir satırda kısa ve net bir şekilde yazılmalı.
 Sadece mesajları sırayla yaz.

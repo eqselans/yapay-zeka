@@ -24,11 +24,16 @@ Kullanıcının diyet tercihi:
 - Mutfak ekipmanları: {ekipman}
 
 Bu bilgiler ışığında türkçe olarak:
-1. Kahvaltı, öğle, akşam yemeği ve 1 ara öğün öner.
-2. Her öğünün yaklaşık kalori ve makro katkısını belirt.
-3. Malzemeleri basit tut, kullanıcının ekipmanına uygun tarifler öner.
-4. Alerjen içeren tariflerden kaçın.
-5. Sadece sade ve uygulanabilir öneriler sun.
+Toplam kelime sayısını 120 kelime ile sınırla.
+Sana bu verilen bilgilerin başlıklarını yazma; direkt olarak önerilere geç.
+Karşında bir insan var, bu yüzden önerilerini samimi ve sıcak bir dille yaz.
+1,2,3,4,5,6,7,8,9,10 gibi numaralandırma yapma.
+Kahvaltı, öğle, akşam yemeği ve 1 ara öğün öner.
+Her öğünün yaklaşık kalori ve makro katkısını belirt.
+Malzemeleri basit tut, kullanıcının ekipmanına uygun tarifler öner.
+Alerjen içeren tariflerden kaçın.
+Sadece sade ve uygulanabilir öneriler sun.
+
 """
 
 prompt = PromptTemplate(

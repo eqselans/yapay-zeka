@@ -11,11 +11,12 @@ from agents.workout_planning_agent import generate_workout_plan
 from agents.schedule_agent import generate_schedule
 from agents.motivation_agent import generate_motivation
 from agents.plan_formatter_agent import format_plan
-from agents.filters import filter_diet_plan
+from agents.filters import filter_diet_plan_llm
+from agents.qa_agent import answer_user_question  # ✅ Yeni agent
 
 app = FastAPI()
 
-# CORS ayarı (tarayıcı izinleri)
+# CORS ayarları
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,7 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# MODELLER
+# ===================
+# 📦 Veri Modelleri
+# ===================
+
 class DietInput(BaseModel):
     kalori: int
     protein: int
@@ -68,7 +72,12 @@ class FilterInput(BaseModel):
     alerjiler: str
     ekipman: str
 
-# ENDPOINTLER
+class QAInput(BaseModel):  # ✅ Yeni model
+    soru: str
+
+# ===================
+# 🚀 API Endpointleri
+# ===================
 
 @app.post("/generate-diet")
 async def generate_diet(data: DietInput):
@@ -132,11 +141,15 @@ async def format_plan_api(data: FormatInput):
 
 @app.post("/filter-plan")
 async def filter_plan_api(data: FilterInput):
-    return filter_diet_plan(
+    return filter_diet_plan_llm(
         plan=data.plan,
         alerjiler=data.alerjiler,
         ekipman=data.ekipman
     )
+
+@app.post("/ask-question")
+async def ask_question(data: QAInput):
+    return answer_user_question(data.soru)
 
 @app.get("/", response_class=HTMLResponse)
 def root():
